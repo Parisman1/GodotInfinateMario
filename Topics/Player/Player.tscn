@@ -1,0 +1,99 @@
+[gd_scene load_steps=18 format=2]
+
+[ext_resource path="res://Ario/2.png" type="Texture" id=1]
+[ext_resource path="res://Ario/6.png" type="Texture" id=2]
+[ext_resource path="res://Ario/3.png" type="Texture" id=3]
+[ext_resource path="res://Ario/4.png" type="Texture" id=4]
+[ext_resource path="res://Ario/0.png" type="Texture" id=5]
+[ext_resource path="res://Ario/7.png" type="Texture" id=6]
+[ext_resource path="res://Ario/8.png" type="Texture" id=7]
+[ext_resource path="res://Ario/9.png" type="Texture" id=8]
+[ext_resource path="res://Ario/12.png" type="Texture" id=9]
+[ext_resource path="res://Ario/13.png" type="Texture" id=10]
+[ext_resource path="res://Player/KinematicBody2D.gd" type="Script" id=11]
+[ext_resource path="res://Ario/11.png" type="Texture" id=12]
+[ext_resource path="res://Ario/5.png" type="Texture" id=13]
+[ext_resource path="res://Pictures/blue.jpg" type="Texture" id=14]
+[ext_resource path="res://Player/Sky.tres" type="Material" id=15]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 7.01691, 7.74561 )
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
+"loop": true,
+"name": "Die",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ],
+"loop": true,
+"name": "WalkR",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 12 ) ],
+"loop": false,
+"name": "JumpR",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": false,
+"name": "JumpL",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": false,
+"name": "IdleR",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": false,
+"name": "IdleL",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "WalkL",
+"speed": 10.0
+} ]
+
+[node name="KinematicBody2D" type="KinematicBody2D"]
+collision/safe_margin = 0.001
+script = ExtResource( 11 )
+__meta__ = {
+"_edit_group_": true
+}
+backSpeedMultiplier = 0.5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 2 )
+animation = "IdleR"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+rotation = -1.8326
+offset = Vector2( 30, -55 )
+current = true
+zoom = Vector2( 0.5, 0.5 )
+smoothing_enabled = true
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]
+follow_viewport_enable = true
+scroll_base_scale = Vector2( 0.1, 0.001 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="Camera2D/ParallaxBackground"]
+motion_offset = Vector2( 0.1, 0.1 )
+motion_mirroring = Vector2( 382, 0 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = ExtResource( 15 )
+position = Vector2( -415.402, -274.153 )
+scale = Vector2( 3.01712, 2.43386 )
+z_index = -100
+texture = ExtResource( 14 )
+centered = false
+__meta__ = {
+"_editor_description_": "	"
+}

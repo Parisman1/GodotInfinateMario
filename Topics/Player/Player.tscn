@@ -31,9 +31,9 @@ animations = [ {
 "name": "WalkR",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 12 ) ],
+"frames": [ ExtResource( 13 ) ],
 "loop": false,
-"name": "JumpR",
+"name": "IdleL",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 5 ) ],
@@ -41,20 +41,20 @@ animations = [ {
 "name": "JumpL",
 "speed": 0.0
 }, {
-"frames": [ ExtResource( 2 ) ],
+"frames": [ ExtResource( 12 ) ],
 "loop": false,
-"name": "IdleR",
-"speed": 0.0
-}, {
-"frames": [ ExtResource( 13 ) ],
-"loop": false,
-"name": "IdleL",
+"name": "JumpR",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
 "loop": true,
 "name": "WalkL",
 "speed": 10.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": false,
+"name": "IdleR",
+"speed": 0.0
 } ]
 
 [node name="KinematicBody2D" type="KinematicBody2D"]

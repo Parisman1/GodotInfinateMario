@@ -17,4 +17,3 @@ collision/safe_margin = 0.1
 
 [node name="Node" type="Node" parent="."]
 script = ExtResource( 2 )
-[connection signal="player" from="Player" to="Node" method="Get_Player"]

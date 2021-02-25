@@ -31,25 +31,25 @@ animations = [ {
 "name": "WalkR",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 13 ) ],
-"loop": false,
-"name": "IdleL",
-"speed": 0.0
-}, {
 "frames": [ ExtResource( 5 ) ],
 "loop": false,
 "name": "JumpL",
-"speed": 0.0
-}, {
-"frames": [ ExtResource( 12 ) ],
-"loop": false,
-"name": "JumpR",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
 "loop": true,
 "name": "WalkL",
 "speed": 10.0
+}, {
+"frames": [ ExtResource( 12 ) ],
+"loop": false,
+"name": "JumpR",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 13 ) ],
+"loop": false,
+"name": "IdleL",
+"speed": 0.0
 }, {
 "frames": [ ExtResource( 2 ) ],
 "loop": false,
@@ -76,7 +76,7 @@ animation = "IdleR"
 rotation = -1.8326
 offset = Vector2( 30, -55 )
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 2, 2 )
 smoothing_enabled = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]

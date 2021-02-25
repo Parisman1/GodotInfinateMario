@@ -3,6 +3,7 @@ extends Node2D
 var X = 0 # used to know next region of chunck to be generated 
 var borders = Rect2(X, -9, 57, 13) # border of each chunk w/ a x variable
 
+
 onready var player = $Player
 onready var tileMap = $TileMap
 

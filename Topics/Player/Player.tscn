@@ -74,10 +74,16 @@ animation = "IdleR"
 
 [node name="Camera2D" type="Camera2D" parent="."]
 rotation = -1.8326
-offset = Vector2( 30, -55 )
+offset = Vector2( 40, -60 )
 current = true
-zoom = Vector2( 2, 2 )
+zoom = Vector2( 0.5, 0.5 )
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
 smoothing_enabled = true
+drag_margin_left = 0.3
+drag_margin_top = 0.6
+drag_margin_right = 0.1
+drag_margin_bottom = 0.3
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="Camera2D"]
 follow_viewport_enable = true
@@ -89,8 +95,8 @@ motion_mirroring = Vector2( 382, 0 )
 
 [node name="Sprite" type="Sprite" parent="."]
 material = ExtResource( 15 )
-position = Vector2( -415.402, -274.153 )
-scale = Vector2( 3.01712, 2.43386 )
+position = Vector2( -415.402, -350.402 )
+scale = Vector2( 4.48924, 2.83729 )
 z_index = -100
 texture = ExtResource( 14 )
 centered = false

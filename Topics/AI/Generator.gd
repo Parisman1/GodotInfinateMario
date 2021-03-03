@@ -1,8 +1,6 @@
 extends Node
 class_name Generator
 
-const DIRECTIONS = [Vector2.UP, Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN]
-
 enum STATE {Ground, Gap}
 
 var position = Vector2.ZERO
@@ -58,26 +56,24 @@ func walk(steps):
 				temp_height +=1
 			if direction == Vector2.DOWN:
 				temp_height -=1
-			#print("TEMP_H: ", temp_height)
+			
 			if State == STATE.Gap:
-				#print("Gap")
 				Ground_list.append(-1)
+				
 			elif State == STATE.Ground and temp_height <= Hill_height:
-				#print("Ground")
 				Ground_list.append(0)
+				
 			else:
-				#print("Ground but over hill height so air")
 				Ground_list.append(-1)
 				
 			step_history.append(position)
-			#print("GL: ", Ground_list.size(), "| SH: ", step_history.size())
 		else:
 			change_direction()
 			
 		if temp_gap == Gap_width:
 			temp_gap = 0
 			normalize_state()
-		#print(" ")
+			
 	return [step_history, Ground_list]
 
 #--name: step()
@@ -137,36 +133,29 @@ func change_direction():
 	elif direction == Vector2.RIGHT and previous_direction == Vector2.DOWN:
 		temp_height = 1
 		direction = Vector2.UP
-	#print("State: ", State)
 
 func chance():
 	var dice = randi() % 10 + 1
-	#print("die: ", dice)
+	
 	match dice:
 		1: # change to gap
-			#print("Gap chance achieved")
 			if temp_hill > hill_width:
-				#print("we in")
 				temp_hill = 0
 				State = STATE.Gap
 				Decide_Gap_Distance()
 		
 		2: # change hill height
-			#print("Hill chance achieved")
-			#State = STATE.Hill_Change
 			Decide_Hill_Height()
 			
 		_: # base case, ground
 			State = STATE.Ground
-		
+
 func normalize_state():
 	State = STATE.Ground
 
 func Decide_Gap_Distance():
 	Gap_width = randi() % 5 + 1
-	#print("-----Gap: ", Gap_width)
 	
-
 func Decide_Hill_Height():
 	var porm = randi() % 1
 	if porm == 1:
@@ -176,6 +165,3 @@ func Decide_Hill_Height():
 		
 	if Hill_height < Base_height:
 		Hill_height = Base_height
-	#print("-----hight: ", Hill_height)
-	#State = STATE.Ground
-	

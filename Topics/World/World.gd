@@ -8,6 +8,7 @@ onready var player = $Player
 onready var tileMap = $TileMap
 
 var distance = 456 # used to tell when the player has traveled enough distance
+var model
 
 #--name: _ready()
 # paramaters: NA
@@ -20,6 +21,8 @@ func _ready():
 	randomize()
 	borders = borders.abs()
 	generate()
+	player.GetModel()
+	#generate()
 
 #--name: _process()
 # paramaters: delta
@@ -42,7 +45,6 @@ func generate():
 	var map = generator.walk(1000)
 	generator.queue_free()
 	for index in range(map[0].size()):
-		#print("Pos: ", map[0][index], " w/ block: ", map[1][index])
 		tileMap.set_cellv(map[0][index], map[1][index]) #  
 	tileMap.update_bitmask_region(borders.position, borders.end)
 	distance += 500
@@ -57,8 +59,13 @@ func generate():
 #	checks to see if the player has made enough progress to generate next chunk
 #	if true calls generate() and updates border to be used by next chunk
 func check_generation():
-	if player.GetPos().x > distance/2:
-		generate()
-		#print("accept")
+	if player.die == true:
+		player.die = false
+		get_tree().reload_current_scene()
 		
-		#print("distance", distance)
+	if player.GetPos().x > distance/2:
+		model = player.GetModel()
+		model.calculateAvg()
+		model.Print()
+		generate()
+		#start new player model

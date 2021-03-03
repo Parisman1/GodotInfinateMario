@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Generator",
 "language": "GDScript",
 "path": "res://AI/Generator.gd"
+}, {
+"base": "Node",
+"class": "Player_Model",
+"language": "GDScript",
+"path": "res://AI/PlayerModel.gd"
 } ]
 _global_script_class_icons={
-"Generator": ""
+"Generator": "",
+"Player_Model": ""
 }
 
 [application]

@@ -1,6 +1,6 @@
 extends KinematicBody2D
-#extends Node2D
 
+var model = Player_Model.new()
 #signal player
 
 # variables for mario like physics
@@ -27,6 +27,7 @@ var speedBeforeJump = 0
 var oldSpeed = 200
 var newSpeed = 275
 var die = false
+var timeVariable = 1
 
 #--name: _process()
 # paramaters: _delta
@@ -37,6 +38,7 @@ func _process(_delta):
 	Velocity.y += GRAVITY
 
 	if Input.is_action_pressed("Run"):
+		model.Running(timeVariable)
 		if MySprite.speed_scale == 1:
 			MySprite.speed_scale = MySprite.speed_scale * 2
 			SPEED = newSpeed
@@ -46,15 +48,18 @@ func _process(_delta):
 	
 	if on_ground: # if on the ground do normal animations and speed calculations
 		if Input.is_action_pressed("ui_right"):
+			model.MovingRight(timeVariable)
 			facingR = true
 			Velocity.x = lerp(Velocity.x, SPEED, 0.05)
 			MySprite.play("WalkR")
 		elif Input.is_action_pressed("ui_left"):
+			model.MovingLeft(timeVariable)
 			facingR = false
 			Velocity.x = lerp(Velocity.x, -SPEED, 0.05)
 			MySprite.play("WalkL")
 		else:
 			Velocity.x = lerp(Velocity.x, 0, 0.1)
+			model.Still(timeVariable)
 			if on_ground:
 				if facingR:
 					MySprite.play("IdleR")
@@ -62,7 +67,9 @@ func _process(_delta):
 					MySprite.play("IdleL")
 					
 	else: # else if they are in the air change how speed and animations are handled
+		model.inAir(timeVariable)
 		if Input.is_action_pressed("ui_right"):
+			model.MovingRight(timeVariable)
 			if facingR:
 				if Velocity.x == 0: # standing still
 					Velocity.x = lerp(Velocity.x, SPEED, 0.1)
@@ -71,6 +78,7 @@ func _process(_delta):
 			else: # facing opposite direction
 				Velocity.x = lerp(Velocity.x, SPEED, 0.05)
 		elif Input.is_action_pressed("ui_left"):
+			model.MovingLeft(timeVariable)
 			if !facingR:
 				if Velocity.x == 0: # standing still
 					Velocity.x = lerp(Velocity.x, -SPEED, 0.1)
@@ -87,6 +95,7 @@ func _process(_delta):
 	Mario_Physics() # fixes physics calculations for mario feel
 	Floor() # sets on_ground variable
 	check_death() # checks state of player
+	model.Speed(SPEED)
 	
 	Velocity = move_and_slide(Velocity, FLOOR) # calls physics engine 
 # ---------- END OF _process ---------- # 
@@ -103,6 +112,8 @@ func Mario_Physics():
 		Velocity += Vector2.UP * (-9.81) * lowJumpMultiplier	
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_up"):
+			model.Jumping(timeVariable)
+			model.JumpCounter(timeVariable)
 			speedBeforeJump = Velocity.x
 			Velocity = Vector2.UP * jumpVelocity
 			Velocity.x = speedBeforeJump
@@ -124,7 +135,7 @@ func check_death():
 #	TODO: set up new world w/ new generation
 func Die():
 	self.global_position = Vector2(12, -10)
-	die = false
+	die = true
 	#Lives -= 1
 	#if Lives <= 0:
 
@@ -147,7 +158,11 @@ func Floor():
 func GetPos():
 	return global_position
 
-
+func GetModel():
+	model.TimeEnd()
+	var old_model = model
+	model = Player_Model.new()
+	return old_model
 
 
 

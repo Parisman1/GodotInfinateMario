@@ -3,7 +3,7 @@ class_name Generator
 
 const DIRECTIONS = [Vector2.UP, Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN]
 
-enum STATE {Ground, Gap, Hill_Change}
+enum STATE {Ground, Gap}
 
 var position = Vector2.ZERO
 var direction = Vector2.UP
@@ -16,10 +16,13 @@ var Gap_chance = false
 var Hill_change_chance = false
 var Ground_list = []
 var State = STATE.Ground
-var Hill_height = 6
+var Hill_height = 4
+var Base_height = 2
 var Gap_width = 3
 var temp_gap = 0
-var temp_height = 0
+var temp_height = 1
+var temp_hill = 0
+var hill_width = 2
 #10 width w/ height 3 is the max
 #normal height max is 4
 
@@ -36,6 +39,7 @@ func _init(starting_pos, new_border, player):
 	assert(new_border.has_point(starting_pos))
 	position = starting_pos
 	step_history.append(position)
+	Ground_list.append(0)
 	borders = new_border
 
 #--name: walk()
@@ -50,28 +54,31 @@ func walk(steps):
 			change_direction()
 			
 		if step():
-			if State == STATE.Ground and direction == Vector2.UP:
+			if direction == Vector2.UP:
 				temp_height +=1
-			if State == STATE.Ground and direction == Vector2.DOWN:
+			if direction == Vector2.DOWN:
 				temp_height -=1
-			
+			#print("TEMP_H: ", temp_height)
 			if State == STATE.Gap:
+				#print("Gap")
 				Ground_list.append(-1)
 			elif State == STATE.Ground and temp_height <= Hill_height:
+				#print("Ground")
 				Ground_list.append(0)
 			else:
+				#print("Ground but over hill height so air")
 				Ground_list.append(-1)
 				
 			step_history.append(position)
-			
+			#print("GL: ", Ground_list.size(), "| SH: ", step_history.size())
 		else:
 			change_direction()
 			
 		if temp_gap == Gap_width:
 			temp_gap = 0
 			normalize_state()
-			
-	return step_history
+		#print(" ")
+	return [step_history, Ground_list]
 
 #--name: step()
 # paramaters: NA
@@ -96,34 +103,57 @@ func change_direction():
 	steps_since_turn = 0
 
 	if direction == Vector2.UP:
-		chance()
+		
+		if State == STATE.Ground:
+			chance()
+			
 		if State == STATE.Gap: 
-			temp_gap +=1
+			temp_gap += 1
+			
+		elif State == STATE.Ground:
+			temp_hill += 1
+			
 		previous_direction = direction
 		direction = Vector2.RIGHT
 
 	elif direction == Vector2.DOWN:
-		chance()
+		
+		if State == STATE.Ground:
+			chance()
+			
 		if State == STATE.Gap: 
-			temp_gap +=1
+			temp_gap += 1
+			
+		elif State == STATE.Ground:
+			temp_hill += 1
+			
 		previous_direction = direction
 		direction = Vector2.RIGHT
 
 	elif direction == Vector2.RIGHT and previous_direction == Vector2.UP:
+		temp_height = 13
 		direction = Vector2.DOWN
 
 	elif direction == Vector2.RIGHT and previous_direction == Vector2.DOWN:
+		temp_height = 1
 		direction = Vector2.UP
-		
+	#print("State: ", State)
+
 func chance():
-	var dice = rand_range(1, 10)
+	var dice = randi() % 10 + 1
+	#print("die: ", dice)
 	match dice:
 		1: # change to gap
-			State = STATE.Gap
-			Decide_Gap_Distance()
+			#print("Gap chance achieved")
+			if temp_hill > hill_width:
+				#print("we in")
+				temp_hill = 0
+				State = STATE.Gap
+				Decide_Gap_Distance()
 		
 		2: # change hill height
-			State = STATE.Hill_Change
+			#print("Hill chance achieved")
+			#State = STATE.Hill_Change
 			Decide_Hill_Height()
 			
 		_: # base case, ground
@@ -133,9 +163,19 @@ func normalize_state():
 	State = STATE.Ground
 
 func Decide_Gap_Distance():
-	Gap_width = rand_range(0,11)
+	Gap_width = randi() % 5 + 1
+	#print("-----Gap: ", Gap_width)
 	
 
 func Decide_Hill_Height():
-	Hill_height = rand_range(0, 4)
+	var porm = randi() % 1
+	if porm == 1:
+		Hill_height += randi() % 4 + 1
+	else:
+		Hill_height -= randi() % 2 + 1
+		
+	if Hill_height < Base_height:
+		Hill_height = Base_height
+	#print("-----hight: ", Hill_height)
+	#State = STATE.Ground
 	

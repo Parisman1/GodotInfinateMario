@@ -38,12 +38,16 @@ func _process(delta):
 #	makes an instance of the generator class and generates a chunk
 #	gives the generated blocks to the tilemap and updates auto tiler
 func generate():
-	var generator = Generator.new(Vector2(X, 0), borders, player)
+	var generator = Generator.new(Vector2(X, 3), borders, player)
 	var map = generator.walk(1000)
 	generator.queue_free()
-	for location in map:
-		tileMap.set_cellv(location, 0)
+	for index in range(map[0].size()):
+		#print("Pos: ", map[0][index], " w/ block: ", map[1][index])
+		tileMap.set_cellv(map[0][index], map[1][index]) #  
 	tileMap.update_bitmask_region(borders.position, borders.end)
+	distance += 500
+	X += 56
+	borders = Rect2(X, -9, 57, 13)
 
 
 #--name: check_generation()
@@ -56,7 +60,5 @@ func check_generation():
 	if player.GetPos().x > distance/2:
 		generate()
 		#print("accept")
-		distance += 456
-		X += 56
-		borders = Rect2(X, -9, 57, 13)
+		
 		#print("distance", distance)

@@ -113,7 +113,7 @@ func Mario_Physics():
 # description: 
 #	checks y position to decide if the layer should respawn
 func check_death():
-	if global_position.y >= 40:
+	if global_position.y >= 50:
 		Die()
 	
 #--name: Die()
@@ -123,7 +123,7 @@ func check_death():
 #	resets players position
 #	TODO: set up new world w/ new generation
 func Die():
-	self.global_position = Vector2(12, -8)
+	self.global_position = Vector2(12, -10)
 	die = false
 	#Lives -= 1
 	#if Lives <= 0:

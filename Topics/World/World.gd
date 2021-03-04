@@ -9,6 +9,7 @@ onready var tileMap = $TileMap
 
 var distance = 456 # used to tell when the player has traveled enough distance
 var model
+var level_model
 
 #--name: _ready()
 # paramaters: NA
@@ -43,6 +44,8 @@ func _process(delta):
 func generate():
 	var generator = Generator.new(Vector2(X, 3), borders, player)
 	var map = generator.walk(1000)
+	level_model = generator.getModel()
+	#level_model.Print()
 	generator.queue_free()
 	for index in range(map[0].size()):
 		tileMap.set_cellv(map[0][index], map[1][index]) #  
@@ -65,7 +68,8 @@ func check_generation():
 		
 	if player.GetPos().x > distance/2:
 		model = player.GetModel()
+		model.queue_free()
 		model.calculateAvg()
-		model.Print()
+		#model.Print()
 		generate()
 		#start new player model

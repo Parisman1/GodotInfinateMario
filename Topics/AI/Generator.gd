@@ -1,7 +1,7 @@
 extends Node
 class_name Generator
 
-var model = LevelModel.new()
+onready var model = LevelModel.new()
 
 enum STATE {Ground, Gap}
 

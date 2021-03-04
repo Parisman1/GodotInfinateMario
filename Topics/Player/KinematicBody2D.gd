@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-var model = Player_Model.new()
+onready var model = Player_Model.new()
 #signal player
 
 # variables for mario like physics
@@ -28,6 +28,9 @@ var oldSpeed = 200
 var newSpeed = 275
 var die = false
 var timeVariable = 1
+
+func _ready():
+	GetModel()
 
 #--name: _process()
 # paramaters: _delta

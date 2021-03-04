@@ -6,6 +6,7 @@ var borders = Rect2(X, -9, 57, 13) # border of each chunk w/ a x variable
 
 onready var player = $Player
 onready var tileMap = $TileMap
+onready var generator = Generator.new(Vector2(X, 3), borders, player)
 
 var distance = 456 # used to tell when the player has traveled enough distance
 var model
@@ -22,7 +23,7 @@ func _ready():
 	randomize()
 	borders = borders.abs()
 	generate()
-	player.GetModel()
+	#player.GetModel()
 	#generate()
 
 #--name: _process()
@@ -42,7 +43,7 @@ func _process(delta):
 #	makes an instance of the generator class and generates a chunk
 #	gives the generated blocks to the tilemap and updates auto tiler
 func generate():
-	var generator = Generator.new(Vector2(X, 3), borders, player)
+	generator = Generator.new(Vector2(X, 3), borders, player)
 	var map = generator.walk(1000)
 	level_model = generator.getModel()
 	#level_model.Print()

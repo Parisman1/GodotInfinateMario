@@ -15,12 +15,18 @@ _global_script_classes=[ {
 "path": "res://AI/Generator.gd"
 }, {
 "base": "Node",
+"class": "LevelModel",
+"language": "GDScript",
+"path": "res://LevelModel.gd"
+}, {
+"base": "Node",
 "class": "Player_Model",
 "language": "GDScript",
 "path": "res://AI/PlayerModel.gd"
 } ]
 _global_script_class_icons={
 "Generator": "",
+"LevelModel": "",
 "Player_Model": ""
 }
 

@@ -1,6 +1,8 @@
 extends Node
 class_name Generator
 
+var model = LevelModel.new()
+
 enum STATE {Ground, Gap}
 
 var position = Vector2.ZERO
@@ -21,6 +23,9 @@ var temp_gap = 0
 var temp_height = 1
 var temp_hill = 0
 var hill_width = 2
+
+var MAX_Width = 5
+var MAX_Height = 3
 #10 width w/ height 3 is the max
 #normal height max is 4
 
@@ -32,13 +37,14 @@ var hill_width = 2
 # description:
 #	checks that starting position is in border, appends the list of 
 #	positions with starting pos and sets border as the new border
-func _init(starting_pos, new_border, player):
+func _init(starting_pos, new_border, _player):
 	randomize()
 	assert(new_border.has_point(starting_pos))
 	position = starting_pos
 	step_history.append(position)
 	Ground_list.append(0)
 	borders = new_border
+	model = LevelModel.new()
 
 #--name: walk()
 # paramaters: steps: int
@@ -61,6 +67,7 @@ func walk(steps):
 				Ground_list.append(-1)
 				
 			elif State == STATE.Ground and temp_height <= Hill_height:
+				#print("Hill Height: ", Hill_height)
 				Ground_list.append(0)
 				
 			else:
@@ -70,7 +77,7 @@ func walk(steps):
 		else:
 			change_direction()
 			
-		if temp_gap == Gap_width:
+		if temp_gap > Gap_width:
 			temp_gap = 0
 			normalize_state()
 			
@@ -139,9 +146,14 @@ func chance():
 	
 	match dice:
 		1: # change to gap
-			if temp_hill > hill_width:
+			#print("current gap count: ", model.CurrentGapCount())
+			#print("Max Gap: ", model.GetMaxGapCount())
+			if temp_hill > hill_width and model.CurrentGapCount() < model.GetMaxGapCount():
+				#print("in")
+				model.MaxGroundWidth(temp_hill)
 				temp_hill = 0
 				State = STATE.Gap
+				model.GapNumber()
 				Decide_Gap_Distance()
 		
 		2: # change hill height
@@ -154,14 +166,18 @@ func normalize_state():
 	State = STATE.Ground
 
 func Decide_Gap_Distance():
-	Gap_width = randi() % 5 + 1
+	Gap_width = randi() % MAX_Width + 1
+	model.MaxGapWidth(Gap_width)
 	
 func Decide_Hill_Height():
-	var porm = randi() % 1
-	if porm == 1:
-		Hill_height += randi() % 4 + 1
+	var porm = randi() % 2
+	if porm == 1 or porm == 2:
+		Hill_height += randi() % MAX_Height + 1
 	else:
 		Hill_height -= randi() % 2 + 1
 		
 	if Hill_height < Base_height:
 		Hill_height = Base_height
+
+func getModel():
+	return model

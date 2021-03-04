@@ -26,9 +26,9 @@ animations = [ {
 "name": "WalkR",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 12 ) ],
+"frames": [ ExtResource( 5 ) ],
 "loop": false,
-"name": "JumpR",
+"name": "JumpL",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
@@ -41,14 +41,14 @@ animations = [ {
 "name": "IdleR",
 "speed": 0.0
 }, {
-"frames": [ ExtResource( 5 ) ],
-"loop": false,
-"name": "JumpL",
-"speed": 0.0
-}, {
 "frames": [ ExtResource( 13 ) ],
 "loop": false,
 "name": "IdleL",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 12 ) ],
+"loop": false,
+"name": "JumpR",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
@@ -58,6 +58,7 @@ animations = [ {
 } ]
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
+position = Vector2( -9.27271, 6.18176 )
 collision/safe_margin = 0.001
 script = ExtResource( 11 )
 __meta__ = {
@@ -76,7 +77,7 @@ animation = "IdleR"
 rotation = -1.8326
 offset = Vector2( 40, -60 )
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 0.6, 0.6 )
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 smoothing_enabled = true
@@ -95,8 +96,8 @@ motion_mirroring = Vector2( 382, 0 )
 
 [node name="Sprite" type="Sprite" parent="."]
 material = ExtResource( 15 )
-position = Vector2( -415.402, -350.402 )
-scale = Vector2( 4.48924, 2.83729 )
+position = Vector2( -1558.63, -1200.39 )
+scale = Vector2( 11.8082, 11.9786 )
 z_index = -100
 texture = ExtResource( 14 )
 centered = false

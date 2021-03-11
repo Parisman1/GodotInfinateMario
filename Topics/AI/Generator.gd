@@ -1,7 +1,9 @@
 extends Node
 class_name Generator
 
-onready var model = LevelModel.new()
+var empty = []
+
+onready var model = LevelModel.new(empty)
 
 enum STATE {Ground, Gap}
 
@@ -37,14 +39,14 @@ var MAX_Height = 3
 # description:
 #	checks that starting position is in border, appends the list of 
 #	positions with starting pos and sets border as the new border
-func _init(starting_pos, new_border, _player):
+func _init(starting_pos, new_border, _player, paramaters):
 	randomize()
 	assert(new_border.has_point(starting_pos))
 	position = starting_pos
 	step_history.append(position)
 	Ground_list.append(0)
 	borders = new_border
-	model = LevelModel.new()
+	model = LevelModel.new(paramaters)
 
 #--name: walk()
 # paramaters: steps: int
@@ -178,6 +180,9 @@ func Decide_Hill_Height():
 		
 	if Hill_height < Base_height:
 		Hill_height = Base_height
+		
+	if Hill_height > model.maxHeight:
+		model.maxHeight = Hill_height
 
 func getModel():
 	return model

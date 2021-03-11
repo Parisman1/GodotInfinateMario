@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "LevelModel",
 "language": "GDScript",
-"path": "res://LevelModel.gd"
+"path": "res://AI/LevelModel.gd"
 }, {
 "base": "Node",
 "class": "Player_Model",

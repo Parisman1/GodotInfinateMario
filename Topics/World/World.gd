@@ -6,11 +6,14 @@ var borders = Rect2(X, -9, 57, 13) # border of each chunk w/ a x variable
 
 onready var player = $Player
 onready var tileMap = $TileMap
-onready var generator = Generator.new(Vector2(X, 3), borders, player)
+onready var generator = Generator.new(Vector2(X, 3), borders, player, [])
 
 var distance = 456 # used to tell when the player has traveled enough distance
-var model
-var level_model
+var model = Player_Model.new()
+var level_model = LevelModel.new([])
+var paramaters = []
+var player_paramaters = []
+var persieved_difficulty = 0
 
 #--name: _ready()
 # paramaters: NA
@@ -43,15 +46,19 @@ func _process(delta):
 #	makes an instance of the generator class and generates a chunk
 #	gives the generated blocks to the tilemap and updates auto tiler
 func generate():
-	generator = Generator.new(Vector2(X, 3), borders, player)
+	generator = Generator.new(Vector2(X, 3), borders, player, paramaters)
 	var map = generator.walk(1000)
 	level_model = generator.getModel()
+	var difficulty = level_model.GetDiff()
+	paramaters = level_model.GetParamaters()
+	#print("Paramaters: ", paramaters)
+	print("diff: ", difficulty)
 	#level_model.Print()
 	generator.queue_free()
 	for index in range(map[0].size()):
 		tileMap.set_cellv(map[0][index], map[1][index]) #  
 	tileMap.update_bitmask_region(borders.position, borders.end)
-	distance += 500
+	distance += 1000
 	X += 56
 	borders = Rect2(X, -9, 57, 13)
 
@@ -66,11 +73,19 @@ func check_generation():
 	if player.die == true:
 		player.die = false
 		get_tree().reload_current_scene()
-		
-	if player.GetPos().x > distance/2:
+	#print("end: ", borders.end.x)
+	#print("pos: ", player.GetPos())
+	#print("distance: ", distance)
+	if player.GetPos().x > distance / 2:
 		model = player.GetModel()
-		model.queue_free()
 		model.calculateAvg()
+		persieved_difficulty = model.Getpersieved_difficulty()
+		player_paramaters = model.GetParams()
+		#print("\n=========================")
+		#print(player_paramaters)
+		print("persieved_difficulty: ", persieved_difficulty)
+		#print("===========================")
 		#model.Print()
+		model.queue_free()
 		generate()
 		#start new player model

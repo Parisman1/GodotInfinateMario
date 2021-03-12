@@ -27,7 +27,10 @@ var temp_hill = 0
 var hill_width = 2
 
 var MAX_Width = 5
+var MIN_Width = 1
+
 var MAX_Height = 3
+var MIN_Height = 1
 #10 width w/ height 3 is the max
 #normal height max is 4
 
@@ -47,6 +50,13 @@ func _init(starting_pos, new_border, _player, paramaters):
 	Ground_list.append(0)
 	borders = new_border
 	model = LevelModel.new(paramaters)
+	AlterGen()
+
+func AlterGen():
+	MAX_Height = model.maxHeight
+	MIN_Height = model.minChangeInHeight
+	MAX_Width = model.maxWidthOfGap
+	MIN_Width = model.minWidthOfGap
 
 #--name: walk()
 # paramaters: steps: int
@@ -108,32 +118,10 @@ func change_direction():
 	steps_since_turn = 0
 
 	if direction == Vector2.UP:
-		
-		if State == STATE.Ground:
-			chance()
-			
-		if State == STATE.Gap: 
-			temp_gap += 1
-			
-		elif State == STATE.Ground:
-			temp_hill += 1
-			
-		previous_direction = direction
-		direction = Vector2.RIGHT
+		Check_State()
 
 	elif direction == Vector2.DOWN:
-		
-		if State == STATE.Ground:
-			chance()
-			
-		if State == STATE.Gap: 
-			temp_gap += 1
-			
-		elif State == STATE.Ground:
-			temp_hill += 1
-			
-		previous_direction = direction
-		direction = Vector2.RIGHT
+		Check_State()
 
 	elif direction == Vector2.RIGHT and previous_direction == Vector2.UP:
 		temp_height = 13
@@ -142,6 +130,19 @@ func change_direction():
 	elif direction == Vector2.RIGHT and previous_direction == Vector2.DOWN:
 		temp_height = 1
 		direction = Vector2.UP
+
+func Check_State():
+	if State == STATE.Ground:
+			chance()
+			
+	if State == STATE.Gap: 
+		temp_gap += 1
+		
+	elif State == STATE.Ground:
+		temp_hill += 1
+		
+	previous_direction = direction
+	direction = Vector2.RIGHT
 
 func chance():
 	var dice = randi() % 10 + 1
@@ -168,15 +169,15 @@ func normalize_state():
 	State = STATE.Ground
 
 func Decide_Gap_Distance():
-	Gap_width = randi() % MAX_Width + 1
+	Gap_width = randi() % MAX_Width + MIN_Width
 	model.MaxGapWidth(Gap_width)
 	
 func Decide_Hill_Height():
 	var porm = randi() % 2
 	if porm == 1 or porm == 2:
-		Hill_height += randi() % MAX_Height + 1
+		Hill_height += randi() % MAX_Height + MIN_Height
 	else:
-		Hill_height -= randi() % 2 + 1
+		Hill_height -= randi() % MAX_Height + MIN_Height
 		
 	if Hill_height < Base_height:
 		Hill_height = Base_height

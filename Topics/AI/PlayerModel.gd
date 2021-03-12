@@ -88,17 +88,17 @@ func Construct():
 func Getpersieved_difficulty():
 	Construct()
 	var persieved_difficulty = 0
-	persieved_difficulty += float(GetWeight(float(Paramaters[0]), float(len(Paramaters)))) * float(Paramaters[0])
-	persieved_difficulty += float(GetWeight(float(Paramaters[1]), float(len(Paramaters)))) * float(Paramaters[1])
+	
+	persieved_difficulty += float(GetWeight(float(Paramaters[0]), float(len(Paramaters)))) * float(Paramaters[0]) * 1.3
+	persieved_difficulty += float(GetWeight(float(Paramaters[1]), float(len(Paramaters)))) * float(Paramaters[1]) * 1.2
 	persieved_difficulty -= float(GetWeight(float(Paramaters[2]), float(len(Paramaters)))) * float(Paramaters[2]) * 0.2
 	persieved_difficulty += float(GetWeight(float(Paramaters[3]), float(len(Paramaters)))) * float(Paramaters[3])
 	persieved_difficulty += float(GetWeight(float(Paramaters[4]), float(len(Paramaters)))) * float(Paramaters[4])
 	persieved_difficulty += float(GetWeight(float(Paramaters[5]), float(len(Paramaters)))) * float(Paramaters[5])
-	persieved_difficulty += float(GetWeight(float(Paramaters[6]), float(len(Paramaters)))) * float(Paramaters[6])
+	persieved_difficulty += float(GetWeight(float(Paramaters[6]), float(len(Paramaters)))) * float(Paramaters[6]) * 1.2
 	persieved_difficulty -= float(GetWeight(float(Paramaters[7]), float(len(Paramaters)))) * float(Paramaters[7])
 	persieved_difficulty -= float(GetWeight(float(Paramaters[8]), float(len(Paramaters)))) * float(Paramaters[8])
-#	for param in Paramaters:
-#		persieved_difficulty += float(GetWeight(float(param), float(len(Paramaters)))) * float(param)
+
 	if persieved_difficulty < 0:
 		persieved_difficulty = 0
 	return persieved_difficulty

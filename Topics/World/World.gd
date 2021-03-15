@@ -6,11 +6,12 @@ var borders = Rect2(X, -9, 57, 13) # border of each chunk w/ a x variable
 
 onready var player = $Player
 onready var tileMap = $TileMap
-onready var generator = Generator.new(Vector2(X, 3), borders, player, [])
+onready var model : Player_Model
+onready var level_model : LevelModel
+onready var generator : Generator
+
 
 var distance = 0 # used to tell when the player has traveled enough distance
-var model = Player_Model.new()
-var level_model = LevelModel.new([])
 var paramaters = []
 var player_paramaters = []
 var persieved_difficulty = 0
@@ -26,7 +27,27 @@ var difficulty = 0
 func _ready():
 	randomize()
 	borders = borders.abs()
-	generate()
+	first_gen()
+
+func first_gen():
+	print("===================== FIRST CHUNK =============================")
+	generator = Generator.new(Vector2(X, 3), borders, player, [])
+	var map = generator.walk()
+	level_model = generator.getModel()
+	difficulty = level_model.GetDiff()
+	paramaters = level_model.GetParamaters()
+	#print("difficulty: ", difficulty)
+	#print(" ")
+	#level_model.Print()
+	
+	generator.queue_free()
+	for index in range(map[0].size()):
+		tileMap.set_cellv(map[0][index], map[1][index]) 
+	tileMap.update_bitmask_region(borders.position, borders.end)
+	
+	distance += 57 * tileMap.cell_size.x
+	X += 56
+	borders = Rect2(X, -9, 57, 13)
 
 #--name: _process()
 # paramaters: delta
@@ -45,20 +66,20 @@ func _process(delta):
 #	makes an instance of the generator class and generates a chunk
 #	gives the generated blocks to the tilemap and updates auto tiler
 func generate():
+	print("===================== NEW CHUNK =============================")
 	generator = Generator.new(Vector2(X, 3), borders, player, level_model.GetParamaters())
-	var map = generator.walk(1000)
+	var map = generator.walk()
 	level_model.queue_free()
-	
 	level_model = generator.getModel()
 	difficulty = level_model.GetDiff()
 	paramaters = level_model.GetParamaters()
-	print("difficulty: ", difficulty)
-	print(" ")
+	#print("difficulty: ", difficulty)
+	#print(" ")
+	#level_model.Print()
 	
 	generator.queue_free()
-	
 	for index in range(map[0].size()):
-		tileMap.set_cellv(map[0][index], map[1][index]) #  
+		tileMap.set_cellv(map[0][index], map[1][index]) 
 	tileMap.update_bitmask_region(borders.position, borders.end)
 	
 	distance += 57 * tileMap.cell_size.x
@@ -75,6 +96,15 @@ func generate():
 func check_generation():
 	if player.die == true:
 		player.die = false
+		$Player.queue_free()
+#		if model:
+#			model.queue_free()
+#		if level_model:
+#			level_model.queue_free()
+#		if $Node:
+#			$Node.queue_free()
+#		if $TileMap:
+#			$TileMap.queue_free()
 		get_tree().reload_current_scene()
 
 	if player.GetPos().x > (distance - (15 * tileMap.cell_size.x)):
@@ -82,10 +112,10 @@ func check_generation():
 		model.calculateAvg()
 		persieved_difficulty = model.Getpersieved_difficulty()
 		player_paramaters = model.GetParams()
-		print("persieved_difficulty: ", persieved_difficulty)
+		#print("persieved_difficulty: ", persieved_difficulty)
 		
 		if float(abs(float(persieved_difficulty) - float(difficulty))) >= .1: # if the difficulty and p_difficulty are not close enough
-			print("difference: ", float(abs(float(persieved_difficulty) - float(difficulty))))
+			#print("difference: ", float(abs(float(persieved_difficulty) - float(difficulty))))
 			if persieved_difficulty < difficulty: # chunk was too easy
 				level_model.IncreaseDiff()
 			else: # chunk was too hard

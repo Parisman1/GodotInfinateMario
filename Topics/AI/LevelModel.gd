@@ -1,7 +1,7 @@
 extends Node
 class_name LevelModel
 
-var MAX_WIDTH = 9
+var MAX_WIDTH = 8
 var MAX_HEIGHT = 3
 
 var numberOfGaps = 0
@@ -10,10 +10,11 @@ var numberOfEnemies = 0
 var maxNumberOfGapsAllowed = 3
 var maxNumberOfEnemies = 0
 var minChangeInHeight = 0
-var maxHeight = 4
+var maxHeightReached = 4
 var minWidthOfGap = 1
 var maxWidthOfGap = 1
 var previousGroundWidth = 0
+var lastHeightofPreviousChunk = 4
 
 var MAX_altering_number = 3
 var MIN_altering_number = 1
@@ -29,10 +30,11 @@ func _init(paramaters):
 		maxNumberOfGapsAllowed = 3
 		maxNumberOfEnemies = 0
 		minChangeInHeight = 1
-		maxHeight = 3
+		maxHeightReached = 4
 		minWidthOfGap = 1
 		maxWidthOfGap = 5
 		previousGroundWidth = 0
+		lastHeightofPreviousChunk = 4
 	else:
 		numberOfGaps = 0
 		numberOfPlatforms = paramaters[1]
@@ -40,10 +42,19 @@ func _init(paramaters):
 		maxNumberOfGapsAllowed = paramaters[3]
 		maxNumberOfEnemies = paramaters[4]
 		minChangeInHeight = paramaters[5]
-		maxHeight = 4
-		minWidthOfGap = paramaters[6]
-		maxWidthOfGap = paramaters[7]
+		minChangeInHeight = CheckMinHeight(minChangeInHeight)
+		
+		maxHeightReached = paramaters[6]
+		minWidthOfGap = paramaters[7]
+		maxWidthOfGap = paramaters[8]
 		previousGroundWidth = 0
+		lastHeightofPreviousChunk = paramaters[10]
+
+func CheckMinHeight(height):
+	#print("In Level Model | MAX_HEIGHT: ", MAX_HEIGHT)
+	if height > MAX_HEIGHT:
+		height = MAX_HEIGHT
+	return height
 
 func GapNumber():
 	numberOfGaps += 1
@@ -76,23 +87,26 @@ func Print():
 	print("max number of gaps per: ", maxNumberOfGapsAllowed)
 	print("max number of enemies: ", maxNumberOfEnemies)
 	print("min change in height: ", minChangeInHeight)
-	print("max change in height: ", maxHeight)
+	print("max change in height: ", maxHeightReached)
 	print("min width of gap: ", minWidthOfGap)
 	print("max width of gap: ", maxWidthOfGap)
 	print("max ground width ", previousGroundWidth)
+	print("lastHeightofPreviousChunk: ", lastHeightofPreviousChunk)
 	print("====================")
 	
 func Construct():
 	Paramaters = [
-	numberOfGaps,           # 0 counter for gaps
-	numberOfPlatforms,      #@ 1 less platforms is more hard
-	numberOfEnemies,        # 2 counter for enemoes
-	maxNumberOfGapsAllowed, #@ 3 more gaps is more hard
-	maxNumberOfEnemies,     #@ 4 more enemies is more hard
-	minChangeInHeight,      #@ 5 higher base change is more hard
-	minWidthOfGap,          #@ 6 larger min gap is hard
-	maxWidthOfGap,          #@ 7 larger max gap is hard
-	previousGroundWidth     # 8 documents width of ground
+	numberOfGaps,             #  0 counter for gaps
+	numberOfPlatforms,        #@ 1 less platforms is more hard
+	numberOfEnemies,          #  2 counter for enemoes
+	maxNumberOfGapsAllowed,   #@ 3 more gaps is more hard
+	maxNumberOfEnemies,       #@ 4 more enemies is more hard
+	minChangeInHeight,        #@ 5 higher base change is more hard
+	maxHeightReached,         #  6 max height that got reached, documentation
+	minWidthOfGap,            #@ 7 larger min gap is hard
+	maxWidthOfGap,            #@ 8 larger max gap is hard
+	previousGroundWidth,      #  9 documents width of ground
+	lastHeightofPreviousChunk # 10 records the last height of the previous chunk
 	]
 
 
@@ -116,7 +130,8 @@ func IncreaseDiff():
 		8:
 			dice = 6
 			
-	print("increase dice: ")
+	#print("increase dice: ")
+	#print("Dice: ", dice)
 	match dice:
 		0:
 			pass
@@ -126,18 +141,24 @@ func IncreaseDiff():
 			pass
 		3:
 			maxNumberOfGapsAllowed = maxNumberOfGapsAllowed + randi() % MAX_altering_number + MIN_altering_number
+			print("Max Number of gaps Increased to: ", maxNumberOfGapsAllowed)
 		4:
 			maxNumberOfEnemies = maxNumberOfEnemies + randi() % MAX_altering_number + MIN_altering_number
+			print("Max number of enemies Increased to :", maxNumberOfEnemies)
 		5:
 			minChangeInHeight = minChangeInHeight + randi() % MAX_altering_number + MIN_altering_number
-			if minChangeInHeight > MAX_HEIGHT:
-				minChangeInHeight = MAX_HEIGHT
+			minChangeInHeight = CheckMinHeight(minChangeInHeight)
+			print("min Change in Height increased to: ", minChangeInHeight)
 		6:
 			minWidthOfGap = minWidthOfGap + randi() % MAX_altering_number + MIN_altering_number
 			if minWidthOfGap > MAX_WIDTH:
 				minWidthOfGap = MAX_WIDTH
+			print("min width of gap increased to: ", minWidthOfGap)
 		7:
 			maxWidthOfGap = maxWidthOfGap + randi() % MAX_altering_number + MIN_altering_number
+			if maxWidthOfGap > MAX_WIDTH:
+				maxWidthOfGap = MAX_WIDTH
+			print("max width of gap increased to: ", maxWidthOfGap)
 		8:
 			pass
 	
@@ -154,7 +175,7 @@ func DecreaseDiff():
 		8:
 			dice = 6
 			
-	print("decrease dice: ")
+	#print("decrease dice: ")
 	match dice:
 		0:
 			pass
@@ -164,20 +185,25 @@ func DecreaseDiff():
 			pass
 		3:
 			maxNumberOfGapsAllowed = maxNumberOfGapsAllowed - randi() % MAX_altering_number + MIN_altering_number
+			print("Max Number of gaps Decreased to: ", maxNumberOfGapsAllowed)
 		4:
 			maxNumberOfEnemies = maxNumberOfEnemies - randi() % MAX_altering_number + MIN_altering_number
+			print("Max number of enemies Decreased  to :", maxNumberOfEnemies)
 		5:
 			minChangeInHeight = minChangeInHeight - randi() % MAX_altering_number + MIN_altering_number
-			if minChangeInHeight > MAX_HEIGHT:
-				minChangeInHeight = 3
+			if minChangeInHeight < 1:
+				minChangeInHeight = 1
+				print("min Change in Height decreased to: ", minChangeInHeight)
 		6:
 			minWidthOfGap = minWidthOfGap - randi() % MAX_altering_number + MIN_altering_number
-			if minWidthOfGap < 0:
-				minWidthOfGap = 0
+			if minWidthOfGap <= 0:
+				minWidthOfGap = 1
+				print("min width of gap increased to: ", minWidthOfGap)
 		7:
 			maxWidthOfGap = maxWidthOfGap - randi() % MAX_altering_number + MIN_altering_number
-			if maxWidthOfGap < 0:
-				maxWidthOfGap = 0
+			if maxWidthOfGap <= 0:
+				maxWidthOfGap = 1
+			print("max width of gap decreased to: ", maxWidthOfGap)
 		8:
 			pass
 
@@ -189,9 +215,11 @@ func GetParamaters():
 	maxNumberOfGapsAllowed, #@ 3 more gaps is more hard
 	maxNumberOfEnemies,     #@ 4 more enemies is more hard
 	minChangeInHeight,      #@ 5 higher base change is more hard
-	minWidthOfGap,          #@ 6 larger min gap is hard
-	maxWidthOfGap,          #@ 7 larger max gap is hard
-	previousGroundWidth     # 8 documents width of ground
+	maxHeightReached,       #  6 documentor for height reached
+	minWidthOfGap,          #@ 7 larger min gap is hard
+	maxWidthOfGap,          #@ 8 larger max gap is hard
+	previousGroundWidth,    # 9 documents width of ground
+	lastHeightofPreviousChunk
 	]
 
 func GetDiff():

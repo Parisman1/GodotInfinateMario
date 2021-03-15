@@ -21,9 +21,12 @@ var State = STATE.Ground
 var Hill_height = 4
 var Base_height = 2
 var Gap_width = 3
+
 var temp_gap = 0
 var temp_height = 1
 var temp_hill = 0
+var previousColHeight = 4
+
 var hill_width = 2
 
 var MAX_Width = 5
@@ -31,6 +34,8 @@ var MIN_Width = 1
 
 var MAX_Height = 3
 var MIN_Height = 1
+
+const GAME_HEIGHT = 13
 #10 width w/ height 3 is the max
 #normal height max is 4
 
@@ -53,10 +58,13 @@ func _init(starting_pos, new_border, _player, paramaters):
 	AlterGen()
 
 func AlterGen():
-	MAX_Height = model.maxHeight
+	#MAX_Height = model.maxHeight
 	MIN_Height = model.minChangeInHeight
 	MAX_Width = model.maxWidthOfGap
+	if MAX_Width <= 0:
+		MAX_Width = 1
 	MIN_Width = model.minWidthOfGap
+	Hill_height = model.lastHeightofPreviousChunk
 
 #--name: walk()
 # paramaters: steps: int
@@ -64,8 +72,8 @@ func AlterGen():
 # description:
 #	"walks" through each step, changing direction when necesarry
 #	and recording every valid step to be used by the tilemap
-func walk(steps):
-	for step in steps:
+func walk():
+	while CheckBounds():
 		if direction == Vector2.RIGHT and steps_since_turn == 1:
 			change_direction()
 			
@@ -79,7 +87,6 @@ func walk(steps):
 				Ground_list.append(-1)
 				
 			elif State == STATE.Ground and temp_height <= Hill_height:
-				#print("Hill Height: ", Hill_height)
 				Ground_list.append(0)
 				
 			else:
@@ -109,6 +116,15 @@ func step():
 		return true
 	else: return false
 
+func CheckBounds():
+	if direction == Vector2.RIGHT:
+		var target_pos = position + direction
+		if borders.has_point(target_pos):
+			return true
+		return false
+	else:
+		return true
+
 #--name: change_direction()
 # paramaters: NA
 # return: NA
@@ -133,14 +149,13 @@ func change_direction():
 
 func Check_State():
 	if State == STATE.Ground:
-			chance()
+		temp_hill += 1
+		chance()
 			
 	if State == STATE.Gap: 
 		temp_gap += 1
-		
-	elif State == STATE.Ground:
-		temp_hill += 1
-		
+	
+	model.lastHeightofPreviousChunk = Hill_height
 	previous_direction = direction
 	direction = Vector2.RIGHT
 
@@ -149,8 +164,6 @@ func chance():
 	
 	match dice:
 		1: # change to gap
-			#print("current gap count: ", model.CurrentGapCount())
-			#print("Max Gap: ", model.GetMaxGapCount())
 			if temp_hill > hill_width and model.CurrentGapCount() < model.GetMaxGapCount():
 				#print("in")
 				model.MaxGroundWidth(temp_hill)
@@ -173,17 +186,30 @@ func Decide_Gap_Distance():
 	model.MaxGapWidth(Gap_width)
 	
 func Decide_Hill_Height():
-	var porm = randi() % 2
-	if porm == 1 or porm == 2:
-		Hill_height += randi() % MAX_Height + MIN_Height
+	var porm = randi() % 2 + 1
+	if porm == 1:
+		#print("MAX_H: ", MAX_Height)
+		#print("MIN_H: ", MIN_Height)
+		var hill_inc = randi() % (MAX_Height-1) + (MIN_Height - 1)
+		if hill_inc > 3:
+			hill_inc = 3
+		#print("hill_inc: ", hill_inc)
+		Hill_height += hill_inc
+		#print("HillHeight after inc: ", Hill_height)
+		
 	else:
 		Hill_height -= randi() % MAX_Height + MIN_Height
 		
 	if Hill_height < Base_height:
 		Hill_height = Base_height
 		
-	if Hill_height > model.maxHeight:
-		model.maxHeight = Hill_height
+	#print("Hill Height: ", Hill_height)
+	if Hill_height > model.maxHeightReached:
+		model.maxHeightReached = Hill_height
+	if Hill_height > GAME_HEIGHT:
+		Hill_height = GAME_HEIGHT
+		#print("Hill after higher than game height: ", Hill_height)
+
 
 func getModel():
 	return model

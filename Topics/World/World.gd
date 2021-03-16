@@ -17,6 +17,10 @@ var player_paramaters = []
 var persieved_difficulty = 0
 var difficulty = 0
 
+var avg_diff: float = 0.0
+var avg_p_diff: float = 0.0
+var NumChunks: float = 0.0
+
 #--name: _ready()
 # paramaters: NA
 # return: NA
@@ -30,13 +34,15 @@ func _ready():
 	first_gen()
 
 func first_gen():
-	print("===================== FIRST CHUNK =============================")
+	#print("===================== FIRST CHUNK =============================")
 	generator = Generator.new(Vector2(X, 3), borders, last_block, [], tileMap)
 	var map = generator.walk()
 	level_model = generator.getModel()
 	difficulty = level_model.GetDiff()
+	avg_diff += difficulty
 	paramaters = level_model.GetParamaters()
-	print("difficulty: ", difficulty)
+	#print("difficulty: ", difficulty)
+	NumChunks += 1.0
 	#print(" ")
 	#level_model.Print()
 	
@@ -66,15 +72,17 @@ func _process(delta):
 #	makes an instance of the generator class and generates a chunk
 #	gives the generated blocks to the tilemap and updates auto tiler
 func generate():
-	print("===================== NEW CHUNK =============================")
+	#print("===================== NEW CHUNK =============================")
 	borders = Rect2(X, -9, 57, 13)
 	generator = Generator.new(Vector2(X, 3), borders, last_block, level_model.GetParamaters(), tileMap)
 	var map = generator.walk()
 	level_model.queue_free()
 	level_model = generator.getModel()
 	difficulty = level_model.GetDiff()
+	avg_diff += difficulty
 	paramaters = level_model.GetParamaters()
-	print("difficulty: ", difficulty)
+	#print("difficulty: ", difficulty)
+	NumChunks += 1.0
 	#print(" ")
 	#level_model.Print()
 	#print("area?: ", generator.area.position)
@@ -98,14 +106,11 @@ func check_generation():
 	if player.die == true:
 		player.die = false
 		$Player.queue_free()
-#		if model:
-#			model.queue_free()
-#		if level_model:
-#			level_model.queue_free()
-#		if $Node:
-#			$Node.queue_free()
-#		if $TileMap:
-#			$TileMap.queue_free()
+		avg_diff /= NumChunks
+		avg_p_diff /= NumChunks
+		NumChunks = 0
+		print("Average Difficulty: ", avg_diff)
+		print("Average Persieved Difficulty: ", avg_p_diff)
 		get_tree().reload_current_scene()
 
 	if last_block.generate:
@@ -113,8 +118,9 @@ func check_generation():
 		model = player.GetModel()
 		model.calculateAvg()
 		persieved_difficulty = model.Getpersieved_difficulty()
+		avg_p_diff += persieved_difficulty
 		player_paramaters = model.GetParams()
-		print("persieved_difficulty: ", persieved_difficulty)
+		#print("persieved_difficulty: ", persieved_difficulty)
 		
 		if float(abs(float(persieved_difficulty) - float(difficulty))) >= .1: # if the difficulty and p_difficulty are not close enough
 			#print("difference: ", float(abs(float(persieved_difficulty) - float(difficulty))))

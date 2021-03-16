@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Ario/2.png" type="Texture" id=1]
 [ext_resource path="res://Ario/6.png" type="Texture" id=2]
@@ -26,6 +26,16 @@ animations = [ {
 "name": "WalkR",
 "speed": 10.0
 }, {
+"frames": [ ExtResource( 12 ) ],
+"loop": false,
+"name": "JumpR",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 2 ) ],
+"loop": false,
+"name": "IdleR",
+"speed": 0.0
+}, {
 "frames": [ ExtResource( 5 ) ],
 "loop": false,
 "name": "JumpL",
@@ -36,19 +46,9 @@ animations = [ {
 "name": "WalkL",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 2 ) ],
-"loop": false,
-"name": "IdleR",
-"speed": 0.0
-}, {
 "frames": [ ExtResource( 13 ) ],
 "loop": false,
 "name": "IdleL",
-"speed": 0.0
-}, {
-"frames": [ ExtResource( 12 ) ],
-"loop": false,
-"name": "JumpR",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
@@ -56,6 +56,9 @@ animations = [ {
 "name": "Die",
 "speed": 5.0
 } ]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 297.957, 273.076 )
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 position = Vector2( -9.27271, 6.18176 )
@@ -104,3 +107,10 @@ centered = false
 __meta__ = {
 "_editor_description_": "	"
 }
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="Area2DShape" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 73.6396, -40.4686 )
+shape = SubResource( 3 )
+[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]

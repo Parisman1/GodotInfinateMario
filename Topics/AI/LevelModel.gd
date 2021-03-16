@@ -1,7 +1,7 @@
 extends Node
 class_name LevelModel
 
-var MAX_WIDTH = 8
+var MAX_WIDTH = 7
 var MAX_HEIGHT = 3
 
 var numberOfGaps = 0

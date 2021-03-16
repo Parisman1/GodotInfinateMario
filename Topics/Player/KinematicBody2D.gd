@@ -166,12 +166,3 @@ func GetModel():
 	var old_model = model
 	model = Player_Model.new()
 	return old_model
-
-
-
-
-
-
-
-
-

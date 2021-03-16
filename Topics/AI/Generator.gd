@@ -36,6 +36,9 @@ var MAX_Height = 3
 var MIN_Height = 1
 
 const GAME_HEIGHT = 13
+
+var area: Area2D
+var tile: TileMap
 #10 width w/ height 3 is the max
 #normal height max is 4
 
@@ -47,9 +50,11 @@ const GAME_HEIGHT = 13
 # description:
 #	checks that starting position is in border, appends the list of 
 #	positions with starting pos and sets border as the new border
-func _init(starting_pos, new_border, _player, paramaters):
+func _init(starting_pos, new_border, AREA, paramaters, tiles):
 	randomize()
 	assert(new_border.has_point(starting_pos))
+	area = AREA
+	tile = tiles
 	position = starting_pos
 	step_history.append(position)
 	Ground_list.append(0)
@@ -100,6 +105,10 @@ func walk():
 			temp_gap = 0
 			normalize_state()
 			
+	#print("pos: ", position)
+	area.global_position = position * tile.cell_size.x
+	#add_child(area)
+	#print("Area pos: ", area.position)
 	return [step_history, Ground_list]
 
 #--name: step()

@@ -120,6 +120,11 @@ func Construct():
 
 func IncreaseDiff():
 	var dice = randi() % 8
+	
+	# second chances are always welcome
+	if minChangeInHeight == MAX_HEIGHT and dice == 5:
+		dice = randi() % 8
+		
 	match dice:
 		0:
 			dice = 3

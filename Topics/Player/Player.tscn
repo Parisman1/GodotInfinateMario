@@ -113,4 +113,3 @@ __meta__ = {
 [node name="Area2DShape" type="CollisionShape2D" parent="Area2D"]
 position = Vector2( 73.6396, -40.4686 )
 shape = SubResource( 3 )
-[connection signal="area_entered" from="Area2D" to="." method="_on_Area2D_area_entered"]

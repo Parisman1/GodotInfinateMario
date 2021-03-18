@@ -1,8 +1,5 @@
 extends KinematicBody2D
 
-onready var model = Player_Model.new()
-#signal player
-
 # variables for mario like physics
 export var fallMultiplier = 2 
 export var lowJumpMultiplier = 10 
@@ -19,6 +16,7 @@ const FLOOR = Vector2(0, -1)
 
 # onready variables
 onready var MySprite = $AnimatedSprite
+onready var model = Player_Model.new()
 
 var Velocity = Vector2()
 var on_ground = false
@@ -37,7 +35,7 @@ func _ready():
 # return: NA
 # description: 
 #	handles state of mario every tick
-func _process(_delta):
+func _physics_process(_delta):
 	Velocity.y += GRAVITY
 
 	if Input.is_action_pressed("Run"):

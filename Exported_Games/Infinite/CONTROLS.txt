@@ -1,5 +1,0 @@
-arrow keys: to run
-
-space bar: to jump
-
-a: to run

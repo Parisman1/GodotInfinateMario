@@ -51,6 +51,15 @@ Run={
  ]
 }
 
+[layer_names]
+
+2d_render/layer_1="Normal"
+2d_physics/layer_1="Player"
+2d_render/layer_2="Player_Hitbox"
+2d_physics/layer_2="Enemy"
+2d_physics/layer_3="Generation"
+2d_physics/layer_4="Ground"
+
 [rendering]
 
 quality/2d/use_pixel_snap=true

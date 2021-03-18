@@ -1,14 +1,14 @@
 extends Node
 class_name LevelModel
 
-var MAX_WIDTH = 7
+var MAX_WIDTH = 5
 var MAX_HEIGHT = 3
 
 var numberOfGaps = 0
 var numberOfPlatforms = 0
 var numberOfEnemies = 0
 var maxNumberOfGapsAllowed = 3
-var maxNumberOfEnemies = 0
+var maxNumberOfEnemies = 1
 var minChangeInHeight = 0
 var maxHeightReached = 4
 var minWidthOfGap = 1
@@ -21,14 +21,14 @@ var MIN_altering_number = 1
 
 var Paramaters = []
 
-func _init(paramaters):
+func _init(paramaters:Array = []):
 	randomize()
 	if len(paramaters) == 0:
 		numberOfGaps = 0
 		numberOfPlatforms = 0
 		numberOfEnemies = 0
 		maxNumberOfGapsAllowed = 3
-		maxNumberOfEnemies = 0
+		maxNumberOfEnemies = 1
 		minChangeInHeight = 1
 		maxHeightReached = 4
 		minWidthOfGap = 1
@@ -43,7 +43,6 @@ func _init(paramaters):
 		maxNumberOfEnemies = paramaters[4]
 		minChangeInHeight = paramaters[5]
 		minChangeInHeight = CheckMinHeight(minChangeInHeight)
-		
 		maxHeightReached = paramaters[6]
 		minWidthOfGap = paramaters[7]
 		maxWidthOfGap = paramaters[8]
@@ -51,7 +50,6 @@ func _init(paramaters):
 		lastHeightofPreviousChunk = paramaters[10]
 
 func CheckMinHeight(height):
-	#print("In Level Model | MAX_HEIGHT: ", MAX_HEIGHT)
 	if height > MAX_HEIGHT:
 		height = MAX_HEIGHT
 	return height
@@ -109,15 +107,6 @@ func Construct():
 	lastHeightofPreviousChunk # 10 records the last height of the previous chunk
 	]
 
-
-#TO DO GENETIC FUCKING SHIT, TAKE THE PARAMATER LIST, GENERATE A BLOCK, CHECK THE DIFF, IF DIFF NOT HIGHER OR LOWER BASED
-#ON SKILL OF PLAYER, DO IT AGAIN, UP TO 3 TIMES AND TAKE THE BEST ONE I SUPPOSE, SHIT WILL TAKE YEARS SO WILL HAVE
-#TO TWEAK FINALLY FITNESS FUNCTION WILL MAYBE BE USED
-
-#GENERATE CHUNK WITH CHANGED PARAMATERS UNTILL THE DIFF AND PERSIEVED_DIFFICULTY IS WITHIN A SMALL DIFFERENCE
-#func IncreaseDiff() and inside make *random* changes toward making it more difficult
-#func DecreaseDiff() and inside make *random* changes toward making it less difficult
-
 func IncreaseDiff():
 	var dice = randi() % 8
 	
@@ -135,8 +124,6 @@ func IncreaseDiff():
 		8:
 			dice = 6
 			
-	#print("increase dice: ")
-	#print("Dice: ", dice)
 	match dice:
 		0:
 			pass
@@ -146,24 +133,24 @@ func IncreaseDiff():
 			pass
 		3:
 			maxNumberOfGapsAllowed = maxNumberOfGapsAllowed + randi() % MAX_altering_number + MIN_altering_number
-			print("Max Number of gaps Increased to: ", maxNumberOfGapsAllowed)
+			#print("Max Number of gaps Increased to: ", maxNumberOfGapsAllowed)
 		4:
 			maxNumberOfEnemies = maxNumberOfEnemies + randi() % MAX_altering_number + MIN_altering_number
-			print("Max number of enemies Increased to :", maxNumberOfEnemies)
+			#print("Max number of enemies Increased to :", maxNumberOfEnemies)
 		5:
 			minChangeInHeight = minChangeInHeight + randi() % MAX_altering_number + MIN_altering_number
 			minChangeInHeight = CheckMinHeight(minChangeInHeight)
-			print("min Change in Height increased to: ", minChangeInHeight)
+			#print("min Change in Height increased to: ", minChangeInHeight)
 		6:
 			minWidthOfGap = minWidthOfGap + randi() % MAX_altering_number + MIN_altering_number
 			if minWidthOfGap > MAX_WIDTH:
 				minWidthOfGap = MAX_WIDTH
-			print("min width of gap increased to: ", minWidthOfGap)
+			#print("min width of gap increased to: ", minWidthOfGap)
 		7:
 			maxWidthOfGap = maxWidthOfGap + randi() % MAX_altering_number + MIN_altering_number
 			if maxWidthOfGap > MAX_WIDTH:
 				maxWidthOfGap = MAX_WIDTH
-			print("max width of gap increased to: ", maxWidthOfGap)
+			#print("max width of gap increased to: ", maxWidthOfGap)
 		8:
 			pass
 	
@@ -179,8 +166,7 @@ func DecreaseDiff():
 			dice = 5
 		8:
 			dice = 6
-			
-	#print("decrease dice: ")
+
 	match dice:
 		0:
 			pass
@@ -190,25 +176,25 @@ func DecreaseDiff():
 			pass
 		3:
 			maxNumberOfGapsAllowed = maxNumberOfGapsAllowed - randi() % MAX_altering_number + MIN_altering_number
-			print("Max Number of gaps Decreased to: ", maxNumberOfGapsAllowed)
+			#print("Max Number of gaps Decreased to: ", maxNumberOfGapsAllowed)
 		4:
 			maxNumberOfEnemies = maxNumberOfEnemies - randi() % MAX_altering_number + MIN_altering_number
-			print("Max number of enemies Decreased  to :", maxNumberOfEnemies)
+			#print("Max number of enemies Decreased  to :", maxNumberOfEnemies)
 		5:
 			minChangeInHeight = minChangeInHeight - randi() % MAX_altering_number + MIN_altering_number
 			if minChangeInHeight < 1:
 				minChangeInHeight = 1
-				print("min Change in Height decreased to: ", minChangeInHeight)
+				#print("min Change in Height decreased to: ", minChangeInHeight)
 		6:
 			minWidthOfGap = minWidthOfGap - randi() % MAX_altering_number + MIN_altering_number
 			if minWidthOfGap <= 0:
 				minWidthOfGap = 1
-				print("min width of gap increased to: ", minWidthOfGap)
+				#print("min width of gap increased to: ", minWidthOfGap)
 		7:
 			maxWidthOfGap = maxWidthOfGap - randi() % MAX_altering_number + MIN_altering_number
 			if maxWidthOfGap <= 0:
 				maxWidthOfGap = 1
-			print("max width of gap decreased to: ", maxWidthOfGap)
+			#print("max width of gap decreased to: ", maxWidthOfGap)
 		8:
 			pass
 
@@ -229,9 +215,6 @@ func GetParamaters():
 
 func GetDiff():
 	Construct()
-#	print("=====")
-#	print(Paramaters)
-#	print("=====")
 	var difficulty = 0
 	for param in Paramaters:
 		difficulty += float(GetWeight(float(param), float(len(Paramaters)))) * float(param)

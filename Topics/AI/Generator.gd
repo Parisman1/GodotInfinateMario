@@ -70,6 +70,8 @@ func AlterGen():
 	MAX_Width = model.maxWidthOfGap
 	if MAX_Width <= 0:
 		MAX_Width = 1
+	if MAX_Width > 5:
+		MAX_Width = 5
 	MIN_Width = model.minWidthOfGap
 	Hill_height = model.lastHeightofPreviousChunk
 	Max_Enemy = model.maxNumberOfEnemies

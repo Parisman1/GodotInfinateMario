@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Ario/2.png" type="Texture" id=1]
 [ext_resource path="res://Ario/6.png" type="Texture" id=2]
@@ -15,6 +15,7 @@
 [ext_resource path="res://Ario/5.png" type="Texture" id=13]
 [ext_resource path="res://Pictures/blue.jpg" type="Texture" id=14]
 [ext_resource path="res://Player/Sky.tres" type="Material" id=15]
+[ext_resource path="res://Player/Back_Limit.gd" type="Script" id=16]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 7.01691, 7.74561 )
@@ -26,14 +27,9 @@ animations = [ {
 "name": "WalkR",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "WalkL",
-"speed": 10.0
-}, {
-"frames": [ ExtResource( 13 ) ],
+"frames": [ ExtResource( 12 ) ],
 "loop": false,
-"name": "IdleL",
+"name": "JumpR",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 2 ) ],
@@ -46,10 +42,15 @@ animations = [ {
 "name": "JumpL",
 "speed": 0.0
 }, {
-"frames": [ ExtResource( 12 ) ],
+"frames": [ ExtResource( 13 ) ],
 "loop": false,
-"name": "JumpR",
+"name": "IdleL",
 "speed": 0.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "WalkL",
+"speed": 10.0
 }, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
@@ -63,14 +64,14 @@ extents = Vector2( 297.957, 273.076 )
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 7.23724, 7.61192 )
 
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 56.8393, 217.118 )
+
 [node name="KinematicBody2D" type="KinematicBody2D"]
 position = Vector2( 0.00252819, 1.1874 )
 collision_mask = 10
 collision/safe_margin = 0.001
 script = ExtResource( 11 )
-__meta__ = {
-"_edit_group_": true
-}
 backSpeedMultiplier = 0.5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -113,7 +114,6 @@ __meta__ = {
 }
 
 [node name="Area2D" type="Area2D" parent="."]
-visible = false
 collision_layer = 4
 collision_mask = 4
 
@@ -127,3 +127,13 @@ collision_mask = 2
 [node name="HitBoxShape" type="CollisionShape2D" parent="HitBox"]
 position = Vector2( 0.34103, 0.34103 )
 shape = SubResource( 4 )
+
+[node name="Back_Limit" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource( 16 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Back_Limit"]
+position = Vector2( -325.762, -457.618 )
+shape = SubResource( 5 )
+[connection signal="area_entered" from="Back_Limit" to="Back_Limit" method="_on_Back_Limit_area_entered"]

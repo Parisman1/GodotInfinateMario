@@ -65,7 +65,7 @@ func first_gen():
 # warning-ignore:unused_argument
 func _process(delta):
 	check_generation()
-		
+
 
 #--name: generate()
 # paramaters: NA

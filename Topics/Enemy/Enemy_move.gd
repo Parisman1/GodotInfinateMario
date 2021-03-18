@@ -29,7 +29,11 @@ func _physics_process(_delta):
 	Velocity = move_and_slide(Velocity, FLOOR)
 
 func Check_Dead():
-	if global_position.y >= 90:
+	if global_position.y >= 500:
+		Die()
+
+func CheckBackLimit(pos):
+	if global_position.x < pos:
 		Die()
 
 

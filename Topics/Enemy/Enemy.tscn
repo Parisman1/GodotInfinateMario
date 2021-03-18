@@ -1,0 +1,44 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://Pictures/icon.png" type="Texture" id=1]
+[ext_resource path="res://Enemy/Enemy.tres" type="Material" id=2]
+[ext_resource path="res://Enemy/Enemy.gd" type="Script" id=3]
+[ext_resource path="res://Enemy/Enemy_move.gd" type="Script" id=4]
+[ext_resource path="res://Enemy/CollisionShape2D.gd" type="Script" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+resource_local_to_scene = true
+extents = Vector2( 8, 8 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 8, 8 )
+
+[node name="KinematicBody2D" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 9
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+script = ExtResource( 5 )
+
+[node name="Enemy" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 9
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy"]
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Enemy/CollisionShape2D"]
+material = ExtResource( 2 )
+position = Vector2( -1.19209e-07, 5.96046e-08 )
+scale = Vector2( 0.25, 0.25 )
+texture = ExtResource( 1 )
+[connection signal="area_entered" from="Enemy" to="Enemy" method="_on_Area2D_area_entered"]

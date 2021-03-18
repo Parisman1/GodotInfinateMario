@@ -9,7 +9,7 @@ onready var last_block = $Area2D
 onready var model : Player_Model
 onready var level_model : LevelModel
 onready var generator : Generator
-
+const Enemy = preload('res://Enemy/Enemy.tscn')
 
 var distance = 0 # used to tell when the player has traveled enough distance
 var paramaters = []
@@ -20,6 +20,7 @@ var difficulty = 0
 var avg_diff: float = 0.0
 var avg_p_diff: float = 0.0
 var NumChunks: float = 0.0
+
 
 #--name: _ready()
 # paramaters: NA
@@ -32,6 +33,7 @@ func _ready():
 	randomize()
 	borders = borders.abs()
 	first_gen()
+	pass
 
 func first_gen():
 	#print("===================== FIRST CHUNK =============================")
@@ -41,15 +43,15 @@ func first_gen():
 	difficulty = level_model.GetDiff()
 	avg_diff += difficulty
 	paramaters = level_model.GetParamaters()
-	#print("difficulty: ", difficulty)
 	NumChunks += 1.0
-	#print(" ")
-	#level_model.Print()
 	
 	generator.queue_free()
 	for index in range(map[0].size()):
 		tileMap.set_cellv(map[0][index], map[1][index]) 
 	tileMap.update_bitmask_region(borders.position, borders.end)
+	
+	if len(map[2]) != 0:
+		Spawn_Enemy(map[2])
 	
 	distance += 57 * tileMap.cell_size.x
 	X += 56
@@ -81,15 +83,15 @@ func generate():
 	difficulty = level_model.GetDiff()
 	avg_diff += difficulty
 	paramaters = level_model.GetParamaters()
-	#print("difficulty: ", difficulty)
 	NumChunks += 1.0
-	#print(" ")
-	#level_model.Print()
-	#print("area?: ", generator.area.position)
-	#generator.queue_free()
+	
+	generator.queue_free()
 	for index in range(map[0].size()):
 		tileMap.set_cellv(map[0][index], map[1][index]) 
 	tileMap.update_bitmask_region(borders.position, borders.end)
+	
+	if len(map[2]) != 0:
+		Spawn_Enemy(map[2])
 	
 	distance += 57 * tileMap.cell_size.x
 	X += 56
@@ -109,9 +111,8 @@ func check_generation():
 		avg_diff /= NumChunks
 		avg_p_diff /= NumChunks
 		NumChunks = 0
-		print("Average Difficulty: ", avg_diff)
-		print("Average Persieved Difficulty: ", avg_p_diff)
-		get_tree().reload_current_scene()
+
+		var _ug = get_tree().reload_current_scene()
 
 	if last_block.generate:
 		last_block.generate = false
@@ -120,22 +121,18 @@ func check_generation():
 		persieved_difficulty = model.Getpersieved_difficulty()
 		avg_p_diff += persieved_difficulty
 		player_paramaters = model.GetParams()
-		#print("persieved_difficulty: ", persieved_difficulty)
 		
 		if float(abs(float(persieved_difficulty) - float(difficulty))) >= .1: # if the difficulty and p_difficulty are not close enough
-			#print("difference: ", float(abs(float(persieved_difficulty) - float(difficulty))))
 			if persieved_difficulty < difficulty: # chunk was too easy
 				level_model.IncreaseDiff()
 			else: # chunk was too hard
 				level_model.DecreaseDiff()
-			#print(paramaters)
-		
 		
 		generate()
 		model.queue_free()
-		#level_model.queue_free()
 
-	#var viewport_rect: Rect2 = tileMap.get_viewport_rect()
-	#var viewport_transform: Transform2D = tileMap.get_viewport_transform()
-	#var global_visible_rect: Rect2 = viewport_transform.affine_inverse().xform(viewport_rect)
-
+func Spawn_Enemy(spawn):
+	for pos in spawn:
+		var enemy = Enemy.instance().init() # make sure init returns self
+		add_child(enemy)
+		enemy.set_pos((pos + Vector2.UP) * tileMap.cell_size.x)

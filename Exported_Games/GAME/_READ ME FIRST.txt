@@ -3,6 +3,8 @@ Controls:
 	space or up key to jump
 	a to run
 
+the game is ment to be played in the small window it starts in, if you want to go full screen you can, however it will 'ruin the magic' 
+
 When you close the game it will create a text file, please email that file to
 pestescs@gmail.com.
 

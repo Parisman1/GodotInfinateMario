@@ -41,6 +41,8 @@ var MIN_Height = 1
 const GAME_HEIGHT = 13
 
 var area: Area2D
+var spawn: Area2D
+var once:bool = true
 var tile: TileMap
 
 #--name: _init()
@@ -51,10 +53,12 @@ var tile: TileMap
 # description:
 #	checks that starting position is in border, appends the list of 
 #	positions with starting pos and sets border as the new border
-func _init(starting_pos, new_border, AREA, paramaters, tiles):
+func _init(starting_pos, new_border, AREA, Start, paramaters, tiles):
 	randomize()
 	assert(new_border.has_point(starting_pos))
 	area = AREA
+	spawn = Start
+	once = Start.reset_once()
 	tile = tiles
 	position = starting_pos
 	step_history.append(position)
@@ -65,7 +69,6 @@ func _init(starting_pos, new_border, AREA, paramaters, tiles):
 	
 
 func AlterGen():
-	#MAX_Height = model.maxHeight
 	MIN_Height = model.minChangeInHeight
 	MAX_Width = model.maxWidthOfGap
 	if MAX_Width <= 0:
@@ -103,6 +106,9 @@ func walk():
 				
 			else:
 				Ground_list.append(-1)
+				if count == 0 and once:
+					once = false
+					spawn.global_position = position * tile.cell_size.x
 			
 			if count > 3:
 				Check_Enemy()
@@ -223,15 +229,14 @@ func Decide_Hill_Height():
 func Check_Enemy():
 	if Enemy_count < Max_Enemy:
 		if temp_height - Hill_height == 1:
-			#print("temp_h: ", temp_height)
-			#print("Hill_h: ", Hill_height)
 			var dice = randi() % 10 + 1
 			if dice == 5: #10% chance
-				#print("SPAWNING ENEMY")
 				Enemy_list.append(position)
 				Enemy_count += 1
 
 func getModel():
 	var return_model = model
-	#model.queue_free()
 	return return_model
+
+func reset_once():
+	once = true

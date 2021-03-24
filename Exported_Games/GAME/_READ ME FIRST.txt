@@ -1,0 +1,11 @@
+Controls:
+	arrow keys to move
+	space or up key to jump
+	a to run
+
+When you close the game it will create a text file, please email that file to
+pestescs@gmail.com.
+
+Everytime you open and close it will create a unique file, please send me any text files it creates.
+
+If you have any questions or problems let me know! Enjoy!

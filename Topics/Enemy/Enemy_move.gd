@@ -32,11 +32,6 @@ func Check_Dead():
 	if global_position.y >= 500:
 		Die()
 
-func CheckBackLimit(pos):
-	if global_position.x < pos:
-		Die()
-
-
 func Die():
 	self.queue_free()
 

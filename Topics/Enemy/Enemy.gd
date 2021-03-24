@@ -10,8 +10,9 @@ func init(spawn):
 
 #when hit, send signal to die
 func _on_Area2D_area_entered(area):
-	if area != Area2D:
-		area.get_parent().Die()
+	if area.get_name() != 'Back_Limit':
+		if area.get_parent().has_method('Die'):
+			area.get_parent().Die()
 
 func Die():
 	self.queue_free()

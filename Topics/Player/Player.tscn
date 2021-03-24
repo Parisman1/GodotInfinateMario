@@ -27,19 +27,9 @@ animations = [ {
 "name": "WalkR",
 "speed": 10.0
 }, {
-"frames": [ ExtResource( 12 ) ],
-"loop": false,
-"name": "JumpR",
-"speed": 0.0
-}, {
 "frames": [ ExtResource( 2 ) ],
 "loop": false,
 "name": "IdleR",
-"speed": 0.0
-}, {
-"frames": [ ExtResource( 5 ) ],
-"loop": false,
-"name": "JumpL",
 "speed": 0.0
 }, {
 "frames": [ ExtResource( 13 ) ],
@@ -47,15 +37,25 @@ animations = [ {
 "name": "IdleL",
 "speed": 0.0
 }, {
-"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
-"loop": true,
-"name": "WalkL",
-"speed": 10.0
-}, {
 "frames": [ ExtResource( 9 ), ExtResource( 10 ) ],
 "loop": true,
 "name": "Die",
 "speed": 5.0
+}, {
+"frames": [ ExtResource( 5 ) ],
+"loop": false,
+"name": "JumpL",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 12 ) ],
+"loop": false,
+"name": "JumpR",
+"speed": 0.0
+}, {
+"frames": [ ExtResource( 1 ), ExtResource( 3 ), ExtResource( 4 ) ],
+"loop": true,
+"name": "WalkL",
+"speed": 10.0
 } ]
 
 [sub_resource type="RectangleShape2D" id=3]
@@ -65,7 +65,7 @@ extents = Vector2( 297.957, 273.076 )
 extents = Vector2( 7.23724, 7.61192 )
 
 [sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 56.8393, 217.118 )
+extents = Vector2( 56.8393, 272.982 )
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 position = Vector2( 0.00252819, 1.1874 )
@@ -88,7 +88,6 @@ current = true
 zoom = Vector2( 0.6, 0.6 )
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
-smoothing_enabled = true
 drag_margin_left = 0.3
 drag_margin_top = 0.6
 drag_margin_right = 0.1
@@ -134,6 +133,30 @@ collision_mask = 2
 script = ExtResource( 16 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Back_Limit"]
-position = Vector2( -325.762, -457.618 )
+position = Vector2( -505.131, -46.688 )
 shape = SubResource( 5 )
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Score" type="Label" parent="HUD"]
+margin_left = 4.79649
+margin_top = 3.89799
+margin_right = 44.7965
+margin_bottom = 17.898
+rect_scale = Vector2( 2, 2 )
+text = "TEST"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MaxScore" type="Label" parent="HUD"]
+margin_left = 3.40756
+margin_top = 35.3886
+margin_right = 97.4076
+margin_bottom = 77.3886
+rect_scale = Vector2( 2, 2 )
+text = "BEST: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="area_entered" from="Back_Limit" to="Back_Limit" method="_on_Back_Limit_area_entered"]

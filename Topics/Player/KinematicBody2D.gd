@@ -17,6 +17,7 @@ const FLOOR = Vector2(0, -1)
 # onready variables
 onready var MySprite = $AnimatedSprite
 onready var model = Player_Model.new()
+onready var Camera = $Camera2D
 
 var Velocity = Vector2()
 var on_ground = false
@@ -28,6 +29,7 @@ var die = false
 var timeVariable = 1
 
 func _ready():
+	Camera.set_process_mode(0)
 	GetModel()
 
 #--name: _process()
@@ -135,10 +137,8 @@ func check_death():
 #	resets players position
 #	TODO: set up new world w/ new generation
 func Die():
-	self.global_position = Vector2(12, -10)
+	Velocity = Vector2(0,0)
 	die = true
-	#Lives -= 1
-	#if Lives <= 0:
 
 #--name: Floor()
 # paramaters: NA
@@ -158,6 +158,9 @@ func Floor():
 #	Gets the position of the player, used in World.gd
 func GetPos():
 	return global_position
+
+func set_spawn(spawn):
+	self.global_position = Vector2(spawn.global_position.x, spawn.global_position.y)
 
 func GetModel():
 	model.TimeEnd()

@@ -113,6 +113,8 @@ func IncreaseDiff():
 	# second chances are always welcome
 	if minChangeInHeight == MAX_HEIGHT and dice == 5:
 		dice = randi() % 8
+	if maxWidthOfGap == MAX_WIDTH and dice == 6:
+		dice = randi() % 8
 		
 	match dice:
 		0:
@@ -122,7 +124,7 @@ func IncreaseDiff():
 		2:
 			dice = 5
 		8:
-			dice = 6
+			dice = 4
 			
 	match dice:
 		0:
@@ -165,7 +167,7 @@ func DecreaseDiff():
 		2:
 			dice = 5
 		8:
-			dice = 6
+			dice = 4
 
 	match dice:
 		0:
@@ -176,20 +178,24 @@ func DecreaseDiff():
 			pass
 		3:
 			maxNumberOfGapsAllowed = maxNumberOfGapsAllowed - randi() % MAX_altering_number + MIN_altering_number
+			if maxNumberOfGapsAllowed < 1:
+				maxNumberOfGapsAllowed = 1
 			#print("Max Number of gaps Decreased to: ", maxNumberOfGapsAllowed)
 		4:
 			maxNumberOfEnemies = maxNumberOfEnemies - randi() % MAX_altering_number + MIN_altering_number
+			if maxNumberOfEnemies <= 0:
+				maxNumberOfEnemies = 0
 			#print("Max number of enemies Decreased  to :", maxNumberOfEnemies)
 		5:
 			minChangeInHeight = minChangeInHeight - randi() % MAX_altering_number + MIN_altering_number
 			if minChangeInHeight < 1:
 				minChangeInHeight = 1
-				#print("min Change in Height decreased to: ", minChangeInHeight)
+			#print("min Change in Height decreased to: ", minChangeInHeight)
 		6:
 			minWidthOfGap = minWidthOfGap - randi() % MAX_altering_number + MIN_altering_number
 			if minWidthOfGap <= 0:
 				minWidthOfGap = 1
-				#print("min width of gap increased to: ", minWidthOfGap)
+			#print("min width of gap decreased to: ", minWidthOfGap)
 		7:
 			maxWidthOfGap = maxWidthOfGap - randi() % MAX_altering_number + MIN_altering_number
 			if maxWidthOfGap <= 0:
@@ -199,7 +205,7 @@ func DecreaseDiff():
 			pass
 
 func GetParamaters():
-	return [
+	Paramaters =  [
 	numberOfGaps,           # 0 counter for gaps
 	numberOfPlatforms,      #@ 1 less platforms is more hard
 	numberOfEnemies,        # 2 counter for enemoes
@@ -212,16 +218,33 @@ func GetParamaters():
 	previousGroundWidth,    # 9 documents width of ground
 	lastHeightofPreviousChunk
 	]
+	return Paramaters
 
 func GetDiff():
 	Construct()
 	var difficulty = 0
-	for param in Paramaters:
-		difficulty += float(GetWeight(float(param), float(len(Paramaters)))) * float(param)
+
+	var group_1 = [Paramaters[0], Paramaters[3], Paramaters[7], Paramaters[8]]
+	var group_2 = [Paramaters[2], Paramaters[4]]
+	var group_3 = [Paramaters[5], Paramaters[6]]
+	var group_4 = [Paramaters[1], Paramaters[9]]
+	
+	difficulty += float(Weight_group(group_1))
+	difficulty += float(Weight_group(group_2))
+	difficulty += float(Weight_group(group_3))
+	difficulty -= float(Weight_group(group_4))
+
 	return difficulty
 
 func GetWeight(param, size):
 	if param == 0:
 		return 0
 	else:
-		return float(1/(size * param))
+		return float(1/((size-1) * param))
+
+func Weight_group(p):
+	var diff:float = 0.0
+	for _p in p:
+		diff += GetWeight(float(_p), p.size())
+	return diff
+
